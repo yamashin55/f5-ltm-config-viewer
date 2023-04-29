@@ -1,0 +1,84 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+  <link rel="stylesheet" type="text/css" href="./css/jquery.dataTables.min.css">
+  <style type="text/css">
+    textarea {width:100%; height: 85vh; box-sizing: border-box; resize: none;}
+    ul{margin: 0; padding: 0; list-style-type: none;}
+    p{margin: 0;}
+    label, input[type='checkbox'] {cursor: pointer; font-size: large; margin-bottom: 8px; margin-top: 10px;}
+    .wrap-tab{ overflow-x: hidden;}
+    .list-tab{display: flex; margin: 0 -2px; border-bottom: 3px solid #5a5a5a; padding-top: 5px;}
+    .list-tab > li{ display: block; padding: 0.5em 1em; margin: 0 2px; width: 100%; color: #fff; text-align: center; background: #a5a5a5; box-sizing: border-box; cursor: pointer;}
+    .list-tab .active{background: #5a5a5a;}
+    .tab-content{display: none; padding: 1em;}  
+    .tab-content.active{display: block;}
+    .table-div {overflow-x: scroll;}
+    .tableclass {width: 100%; text-align: left; border-collapse: collapse; border-spacing: 0; float: left; padding-top: 5px;}
+    .tableclass tr {border: solid 1px #dfdfdf;}
+    .tableclass th {padding: 7px; background: #cdf6fc; border-right: dashed 1px #a2adb9;}
+    .tableclass td {padding: 3px; border-right: dashed 1px #dfe1e2;}
+    .table {overflow-x: auto; white-space: nowrap;}
+    .searchall {position:fixed; top:70px; right:10px; width: 350px; background: #f1f1f1; height: 36px; padding: 3px; z-index: 1000; border-radius: 15px; padding-left: 12px;}
+    #searchInput {height: 18px; width: 50%; margin-left: 8px;}
+    .generateExcel {float: right; margin-right: 20px;}
+</style>
+
+</head>
+
+<body>
+  <header>
+  <input type="button" id="id_open" value="Open [bigip*.conf ]">&nbsp
+  <input type="button" id="id_save" value="Save [no support]" readonly disabled>&nbsp
+  <input type="text" id="id_file" value="" readonly disabled>&nbsp
+  <input type="button" id="id_load" value="Start config check">&nbsp
+  <div class="generateExcel" id="id_generateExcel"><button>Download xlsx file.</button></div>&nbsp
+  <a id="id_status">..</a>
+  <script src="./scripts/jquery-3.5.1.js"></script>
+  <script src="./scripts/jquery.dataTables.min.js"></script>
+  <script src="./scripts/xlsx.full.min.js"></script>
+</header>
+
+  <div class="wrap-tab">
+    <!-- タブヘッダー -->
+    <ul id="js-tab" class="list-tab">
+      <li class="tab active">Load Data</li>
+      <li class="tab">Table Data</li>
+      <li class="tab">CSV Data</li>
+      <li class="tab">VS POOL Map</li>
+    </ul>
+    
+    <!-- タブ内のコンテンツ -->
+    <div class="wrap-tab-content">
+
+      <!-- タブ１コンテンツ -->
+      <div class="tab-content active">
+        <textarea id="id_text" wrap="off" readonly disabled>No Data..</textarea>  
+      </div>
+
+      <!-- タブ２コンテンツ -->
+      <div class="tab-content"> 
+        <div class="searchall">
+          <label>Search : (Regex) </label><input type="checkbox" class="global_filter" id="global_regex"><input type="text" id="searchInput"></label>
+        </div>
+        <div class="table" id="id_table_content"></div>
+      </div>
+
+      <!-- タブ３コンテンツ -->
+      <div class="tab-content"> 
+        <textarea id="id_csv" wrap="off" readonly disabled>No Data..</textarea> 
+      </div>
+
+      <!-- タブ４コンテンツ -->
+      <div class="tab-content"> 
+        <div id="id_vs_pool_mapping">
+
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+</body>
+  <script src="tab.js"></script>
+</html>

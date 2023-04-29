@@ -1,0 +1,13 @@
+﻿{
+  "name": "F5-LTM-Config-Viewer",
+  "version": "1.2",
+  "manifest_version": 3,
+  "description": "F5-LTM-Config-Viewer",
+  "action": {
+    "default_title": "F5-LTM-Config-Viewer",
+    "default_popup": "popup.html",
+    "default_icon": {
+      "32": "icon.png"
+    }
+  }
+}
