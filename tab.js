@@ -8,6 +8,7 @@ const elStatus = document.getElementById("id_status");
 const elTab = document.getElementById("js-tab");
 const elTable = document.getElementById("id_table_content");
 const generateExcel = document.getElementById("id_generateExcel");
+const allCheck = document.getElementById("id_allcheck");
 let windowInitHeight;
 let textInitHeight;
 let objData = new Object();
@@ -233,7 +234,7 @@ elLoad.onclick = async () => {
       for (let category of categorys) {
           // console.log(category);
           let arrCategoryData = items.filter(item => item._CATEGORY_ === category);
-          head = `<label><input type="checkbox" class="category-chk" id="${category}" checked>${category} </label><br>
+          head = `<label><input type="checkbox" class="category-chk" id="${category}">${category} </label><br>
           <div class="table-div"><table class="tableclass" id="id_Table_${category}" style="display: inline;">`;
           resultTable = resultTable + head + (TableMaker.make({tableId: `id_Table_${category}`, json: arrCategoryData})) + '</table></div><br>';
           // console.log(resultTable);
@@ -391,6 +392,8 @@ elLoad.onclick = async () => {
                                   data[key[0] + '.' + key[1]] = merged[1];
                                   if (merged[0].match(/.* members {$|.* profiles {$/g)) {
                                     exldata[key[0] + '.' + key[1]] = merged[1].replace(/ } \//g, ' } \r\n\/');
+                                  } else {
+                                    exldata[key[0] + '.' + key[1]] = merged[1];
                                   }
                                   i = endStanzaSecondNum;
                                   flag = 0;
@@ -585,5 +588,23 @@ document.addEventListener('click', (e) => {
     }else{
       // 表示
       document.getElementById(table).style.display = 'none'
-    }  }
+    }  
+  }
+  if (e.target.id === "id_allcheck") {
+    console.log("aaa");
+    const checkbox3 = document.getElementsByClassName("category-chk")
+    const trueorfalse = checkbox3[1].checked
+    for(i = 0; i < checkbox3.length; i++) {
+      const id = checkbox3[i].id;
+      const table = `id_Table_${id}_wrapper`;
+      
+      if (trueorfalse){
+        checkbox3[i].checked = false
+        document.getElementById(table).style.display = 'none';
+      } else {
+        checkbox3[i].checked = true
+        document.getElementById(table).style.display = 'inline'; 
+      }
+    }
+  }
 });

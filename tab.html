@@ -13,7 +13,6 @@
     .list-tab .active{background: #5a5a5a;}
     .tab-content{display: none; padding: 1em;}  
     .tab-content.active{display: block;}
-    .table-div {overflow-x: scroll;}
     .tableclass {width: 100%; text-align: left; border-collapse: collapse; border-spacing: 0; float: left; padding-top: 5px;}
     .tableclass tr {border: solid 1px #dfdfdf;}
     .tableclass th {padding: 7px; background: #cdf6fc; border-right: dashed 1px #a2adb9;}
@@ -22,6 +21,8 @@
     .searchall {position:fixed; top:70px; right:10px; width: 350px; background: #f1f1f1; height: 36px; padding: 3px; z-index: 1000; border-radius: 15px; padding-left: 12px;}
     #searchInput {height: 18px; width: 50%; margin-left: 8px;}
     .generateExcel {float: right; margin-right: 20px;}
+    table.dataTable.no-footer {overflow-x: scroll;}
+    .dataTables_wrapper {display: none}
 </style>
 
 </head>
@@ -58,6 +59,7 @@
 
       <!-- タブ２コンテンツ -->
       <div class="tab-content"> 
+        <input type="button" id="id_allcheck" value="All Check/Uncheck">
         <div class="searchall">
           <label>Search : (Regex) </label><input type="checkbox" class="global_filter" id="global_regex"><input type="text" id="searchInput"></label>
         </div>
