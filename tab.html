@@ -23,6 +23,7 @@
     .generateExcel {float: right; margin-right: 20px;}
     table.dataTable.no-footer {overflow-x: scroll;}
     .dataTables_wrapper {display: none}
+    input#id_mapping {margin-bottom: 5px;}
 </style>
 
 </head>
@@ -74,7 +75,19 @@
       <!-- タブ４コンテンツ -->
       <div class="tab-content"> 
         <div id="id_vs_pool_mapping">
-
+          <input type="button" id="id_mapping" value="Get VS and PoolMember"></br>
+            <table class="tableclass table-div">
+              <thead id="id_resultTable">
+                <tr>
+                  <th>Virtual_Server_NAME</th>
+                  <th>Virtual_Server_Address</th>
+                  <th>Virtual_Server_Pool</th>
+                  <th>Pool_Member</th>
+                </tr>
+              </thead>
+              <tbody>
+              </tbody>
+            </table>
         </div>
       </div>
 

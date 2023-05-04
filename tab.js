@@ -9,10 +9,12 @@ const elTab = document.getElementById("js-tab");
 const elTable = document.getElementById("id_table_content");
 const generateExcel = document.getElementById("id_generateExcel");
 const allCheck = document.getElementById("id_allcheck");
+const elMapping = document.getElementById("id_resultTable");
+
 let windowInitHeight;
 let textInitHeight;
 let objData = new Object();
-
+// ---------------------------------------------
 // Called when this html file is loaded.
 window.onload = function () {
   // Bring the window to the top.
@@ -21,7 +23,8 @@ window.onload = function () {
   });
   windowInitHeight = window.innerHeight;
   textInitHeight = elText.offsetHeight;
-}
+};
+// ---------------------------------------------
 
 // Synchronize the height of window and textarea.
 window.addEventListener("DOMContentLoaded", () => {
@@ -54,6 +57,7 @@ window.addEventListener("DOMContentLoaded", () => {
     document.querySelectorAll('.tab-content')[index].classList.add('active');
   };
 });
+// ---------------------------------------------
 
 // File Type Set
 const fileTypes = [
@@ -63,7 +67,8 @@ const fileTypes = [
       "text/plain": [".txt", ".conf"]
     }
   },
-]
+];
+// ---------------------------------------------
 
 // File open
 elOpen.onclick = async () => {
@@ -75,9 +80,10 @@ elOpen.onclick = async () => {
     elText.value = await fd.text();
   }
   catch (e) { }
-}
+};
+// ---------------------------------------------
 
-// Save ..
+// Save 
 elSave.onclick = async () => {
   try {
     const fh = await window.showSaveFilePicker({ types: fileTypes, suggestedName: elFile.value });
@@ -87,7 +93,8 @@ elSave.onclick = async () => {
     elFile.value = fh.name;
   }
   catch (e) { }
-}
+};
+// ---------------------------------------------
 
 // Generate Excel file
 generateExcel.onclick = async () => {
@@ -99,19 +106,21 @@ generateExcel.onclick = async () => {
       /* XLSXワークブックを作成 */
       let wb = XLSX.utils.book_new();
       const categorys = [...new Set(items.map(item => item._CATEGORY_))];
+      var i = 1
       for (let category of categorys) {
-        let sheetName = category;
+        let sheetName = i + "_" + category;
         if (sheetName.length > 31) {
-          category = sheetName.slice(0, 31);
+          sheetName = sheetName.slice(0, 31);
         }
         let arrCategoryData = items.filter(item => item._CATEGORY_ === category);
         let ws = XLSX.utils.json_to_sheet(arrCategoryData);
         try {
-          XLSX.utils.book_append_sheet(wb, ws, category);
+          XLSX.utils.book_append_sheet(wb, ws, sheetName);
         } 
         catch (e) {
           console.log(e);
         }
+        ++i
       }
       /* XLSXワークブックをダウンロード */
       XLSX.writeFile(wb, filename);
@@ -122,7 +131,8 @@ generateExcel.onclick = async () => {
   catch (e) {
     elStatus.innerText = `...._⊂⌒~⊃｡Д｡)⊃ だめだこりゃ。${e} `;
   }
-}
+};
+// ---------------------------------------------
 
 // Start check
 elLoad.onclick = async () => {
@@ -574,10 +584,12 @@ elLoad.onclick = async () => {
 
   }
   catch (e) { console.log(e); } 
-} 
+};
+// ---------------------------------------------
 
-// チェックボックスに応じた表示、非表示
+// Click Event
 document.addEventListener('click', (e) => {
+  // チェックボックスに応じた表示、非表示
   if (e.target.className === "category-chk") {
     const id = e.target.id;
     const table = `id_Table_${id}_wrapper`;
@@ -590,8 +602,9 @@ document.addEventListener('click', (e) => {
       document.getElementById(table).style.display = 'none'
     }  
   }
+  // ---------------------------------------------
+  // 全選択/全解除 ボタン
   if (e.target.id === "id_allcheck") {
-    console.log("aaa");
     const checkbox3 = document.getElementsByClassName("category-chk")
     const trueorfalse = checkbox3[1].checked
     for(i = 0; i < checkbox3.length; i++) {
@@ -607,4 +620,50 @@ document.addEventListener('click', (e) => {
       }
     }
   }
+  // ---------------------------------------------
+  // Get VS and PoolMember ボタン
+  if (e.target.id === "id_mapping") {
+    var table_vs = $('#id_Table_ltm_virtual').DataTable();
+    var table_pool = $('#id_Table_ltm_pool').DataTable();
+  
+    var vsData = table_vs.rows().data().toArray();
+    var poolData = table_pool.rows().data().toArray();
+  
+    var poolTableMemberColumnIndex = -1; // 列番号の初期値
+    var poolHeader = table_pool.columns().header();
+    poolHeader.each(function(header, index) {
+      if (header.textContent === 'ltm_pool.members') { // Pool_Member列が見つかった場合
+        poolTableMemberColumnIndex = index; // 列番号を保存
+        return false; // each()を抜ける
+      }
+    });
+  
+    var vsTablePoolColumnIndex = -1; // 列番号の初期値
+    var vsTableDestAddrColumnIndex = -1; // 列番号の初期値
+    var vsHeader = table_vs.columns().header();
+    vsHeader.each(function(header, index) {
+      if (header.textContent === 'ltm_virtual.pool') { // Virtual_Server_Pool列が見つかった場合
+        vsTablePoolColumnIndex = index; // 列番号を保存
+        return false; // each()を抜ける
+      } else if (header.textContent === 'ltm_virtual.destination') { // Virtual_Server_Address列が見つかった場合
+        vsTableDestAddrColumnIndex = index; // 列番号を保存
+        return false; // each()を抜ける
+      }
+    });
+    
+  
+    var headTable = "<thead><tr><th>Virtual_Server_NAME</th><th>Virtual_Server_Address</th><th>Virtual_Server_Pool</th><th>Pool_Member</th></tr></thead><tbody>"
+    var bodyTable = ""
+    var foodTable = "</tbody>"
+    vsData.forEach(function(vs) {
+      var pool = poolData.find(function(p) { return p[1] === vs[vsTablePoolColumnIndex]; });
+      if (pool) {
+        var poolMember = pool[poolTableMemberColumnIndex];
+        bodyTable = bodyTable + `<tr><td>${vs[1]}</td><td>${vs[vsTableDestAddrColumnIndex]}</td><td>${vs[vsTablePoolColumnIndex]}</td><td>${poolMember}</td></tr>`
+      }
+    });
+    // console.log(headTable + bodyTable + foodTable)
+    elMapping.innerHTML = headTable + bodyTable + foodTable
+  }
 });
+// ---------------------------------------------
