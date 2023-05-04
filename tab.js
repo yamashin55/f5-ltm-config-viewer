@@ -9,7 +9,7 @@ const elTab = document.getElementById("js-tab");
 const elTable = document.getElementById("id_table_content");
 const generateExcel = document.getElementById("id_generateExcel");
 const allCheck = document.getElementById("id_allcheck");
-const elMapping = document.getElementById("id_resultTable");
+const elVsPoolTable = document.getElementById("id_vsPoolTable");
 
 let windowInitHeight;
 let textInitHeight;
@@ -583,7 +583,7 @@ elLoad.onclick = async () => {
     }
 
   }
-  catch (e) { console.log(e); } 
+  catch (e) { console.log(e); }
 };
 // ---------------------------------------------
 
@@ -622,48 +622,51 @@ document.addEventListener('click', (e) => {
   }
   // ---------------------------------------------
   // Get VS and PoolMember ボタン
-  if (e.target.id === "id_mapping") {
-    var table_vs = $('#id_Table_ltm_virtual').DataTable();
-    var table_pool = $('#id_Table_ltm_pool').DataTable();
-  
-    var vsData = table_vs.rows().data().toArray();
-    var poolData = table_pool.rows().data().toArray();
-  
-    var poolTableMemberColumnIndex = -1; // 列番号の初期値
-    var poolHeader = table_pool.columns().header();
-    poolHeader.each(function(header, index) {
-      if (header.textContent === 'ltm_pool.members') { // Pool_Member列が見つかった場合
-        poolTableMemberColumnIndex = index; // 列番号を保存
-        return false; // each()を抜ける
-      }
-    });
-  
-    var vsTablePoolColumnIndex = -1; // 列番号の初期値
-    var vsTableDestAddrColumnIndex = -1; // 列番号の初期値
-    var vsHeader = table_vs.columns().header();
-    vsHeader.each(function(header, index) {
-      if (header.textContent === 'ltm_virtual.pool') { // Virtual_Server_Pool列が見つかった場合
-        vsTablePoolColumnIndex = index; // 列番号を保存
-        return false; // each()を抜ける
-      } else if (header.textContent === 'ltm_virtual.destination') { // Virtual_Server_Address列が見つかった場合
-        vsTableDestAddrColumnIndex = index; // 列番号を保存
-        return false; // each()を抜ける
-      }
-    });
-    
-  
-    var headTable = "<thead><tr><th>Virtual_Server_NAME</th><th>Virtual_Server_Address</th><th>Virtual_Server_Pool</th><th>Pool_Member</th></tr></thead><tbody>"
-    var bodyTable = ""
-    var foodTable = "</tbody>"
-    vsData.forEach(function(vs) {
-      var pool = poolData.find(function(p) { return p[1] === vs[vsTablePoolColumnIndex]; });
-      if (pool) {
-        var poolMember = pool[poolTableMemberColumnIndex];
-        bodyTable = bodyTable + `<tr><td>${vs[1]}</td><td>${vs[vsTableDestAddrColumnIndex]}</td><td>${vs[vsTablePoolColumnIndex]}</td><td>${poolMember}</td></tr>`
-      }
-    });
-    // console.log(headTable + bodyTable + foodTable)
-    elMapping.innerHTML = headTable + bodyTable + foodTable
+  try {
+    if (e.target.id === "id_mapping") {
+      var table_vs = $('#id_Table_ltm_virtual').DataTable();
+      var table_pool = $('#id_Table_ltm_pool').DataTable();
+      var vsData = table_vs.rows().data().toArray();
+      var poolData = table_pool.rows().data().toArray();
+      var poolTableMemberColumnIndex = -1; // 列番号の初期値
+      var poolHeader = table_pool.columns().header();
+      poolHeader.each(function(header, index) {
+        if (header.textContent === 'ltm_pool.members') { // Pool_Member列が見つかった場合
+          poolTableMemberColumnIndex = index; // 列番号を保存
+          return false; // each()を抜ける
+        }
+      });
+      var vsTablePoolColumnIndex = -1; // 列番号の初期値
+      var vsTableDestAddrColumnIndex = -1; // 列番号の初期値
+      var vsHeader = table_vs.columns().header();
+      vsHeader.each(function(header, index) {
+        if (header.textContent === 'ltm_virtual.pool') { // Virtual_Server_Pool列が見つかった場合
+          vsTablePoolColumnIndex = index; // 列番号を保存
+          return false; // each()を抜ける
+        } else if (header.textContent === 'ltm_virtual.destination') { // Virtual_Server_Address列が見つかった場合
+          vsTableDestAddrColumnIndex = index; // 列番号を保存
+          return false; // each()を抜ける
+        }
+      });
+      var headTable = `<thead><tr><th>Virtual_Server_NAME</th><th>Virtual_Server_Address</th><th>Virtual_Server_Pool</th><th>Pool_Member</th></tr></thead><tbody>`
+      var bodyTable = ""
+      var foodTable = "</tbody>"
+      var table = ""
+      vsData.forEach(function(vs) {
+        var pool = poolData.find(function(p) { return p[1] === vs[vsTablePoolColumnIndex]; });
+        if (pool) {
+          var poolMember = pool[poolTableMemberColumnIndex];
+          bodyTable = bodyTable + `<tr><td>${vs[1]}</td><td>${vs[vsTableDestAddrColumnIndex]}</td><td>${vs[vsTablePoolColumnIndex]}</td><td>${poolMember}</td></tr>`
+        }
+      });
+      table =  headTable + bodyTable + foodTable
+      elVsPoolTable.innerHTML = table;
+    }
+
   }
+  catch (e) { console.log(e); }
 });
 // ---------------------------------------------
+// try {
+// }
+// catch (e) { console.log(e); }
