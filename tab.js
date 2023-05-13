@@ -119,18 +119,18 @@ generateExcel.onclick = async () => {
           XLSX.utils.book_append_sheet(wb, ws, sheetName);
         } 
         catch (e) {
-          console.log(e);
+          elStatus.innerText = `例外エラー：  ${e} `;
         }
         ++i
       }
       /* XLSXワークブックをダウンロード */
       XLSX.writeFile(wb, filename);
     } else {
-      elStatus.innerText = `...._⊂⌒~⊃｡Д｡)⊃ データが空っぽだす！`;
+      elStatus.innerText = `空データ`;
     }
   }
   catch (e) {
-    elStatus.innerText = `...._⊂⌒~⊃｡Д｡)⊃ だめだこりゃ。${e} `;
+    elStatus.innerText = `例外エラー：  ${e} `;
   }
 };
 // ---------------------------------------------
@@ -164,7 +164,10 @@ elLoad.onclick = async () => {
       elTable.innerHTML = resultTable;
 
       //処理終わり
-      elStatus.innerText = "...._⊂⌒~⊃｡Д｡)⊃ おわたょ！ ";
+      elStatus.innerText = "処理完了";
+    } else {
+      elStatus.innerText = `空データ`;
+      throw new Error('uploaded data is empty.');
     }
 
     // テーブルのフィルター機能
@@ -584,7 +587,9 @@ elLoad.onclick = async () => {
     }
 
   }
-  catch (e) { console.log(e); }
+  catch (e) {
+    elStatus.innerText = `例外エラー：  ${e} `;
+  }
 };
 // ---------------------------------------------
 
@@ -676,7 +681,9 @@ elMapping.onclick = async () => {
     // テーブルの出力
     elVsPoolTable.innerHTML = table;
   }
-  catch (e) { console.log(e);}
+  catch (e) {
+    elStatus.innerText = `例外エラー：  ${e} `;
+  }
 };
 // ---------------------------------------------
 
