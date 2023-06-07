@@ -176,7 +176,8 @@ elLoad.onclick = async () => {
         var tableId = '#id_Table_' + category;
         // console.log(tableId);
         var table1 = $(tableId).DataTable({
-          lengthMenu: [[10, 25, 50, 100, -1], [10, 25, 50, 100, "All"]]
+          lengthMenu: [[10, 25, 50, 100, -1], [10, 25, 50, 100, "All"]],
+          iDisplayLength: -1
         });
         var globalRegex = false; // 初期状態は正規表現検索オフ
         $("#searchInput").on("keyup", function() {
